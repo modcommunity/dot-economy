@@ -18,7 +18,7 @@ extends Node
 ## [/codeblock]
 ##
 ## [b]It sells ids and never grants anything.[/b] `bought` carries an item id and the
-## game does whatever that means — [DotLoadoutManager], a [DotArsenal], a boolean. A
+## game does whatever that means — [DotLoadoutManager], a [DotWeaponArsenal], a boolean. A
 ## shop that granted things would be one that could not validate a purchase without
 ## loading a mesh, which is dot-loadout's rule and the same one.
 ##

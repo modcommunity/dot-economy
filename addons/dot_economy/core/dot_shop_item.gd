@@ -21,14 +21,14 @@ extends Resource
 
 ## Which teams may buy it. Empty means everybody.
 ##
-## The Counter-Strike case, and it is a genuine rule rather than a cosmetic one: half
-## the arsenal is one side's only.
+## The round-based-shooter case, and it is a genuine rule rather than a cosmetic one:
+## half the arsenal is one side's only.
 @export var teams: PackedInt32Array = PackedInt32Array()
 
 ## What killing with this is worth, overriding
 ## [member DotEconomyRules.kill_award]. Negative means "use the default".
 ##
-## Counter-Strike's most-copied economic idea: an AWP kill pays 100 and a knife kill
+## The genre's most-copied economic idea: a sniper-rifle kill pays 100 and a knife kill
 ## pays 1500, so the cheapest way to make money is the riskiest thing you can do.
 @export_range(-1, 100000, 1) var kill_award: int = -1
 

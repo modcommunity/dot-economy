@@ -1,7 +1,7 @@
 # dot-economy
 
-A round-based buy economy: money, a shop, a buy window, refunds, and Counter-Strike's
-loss-bonus ladder. **It sells ids and grants nothing.**
+A round-based buy economy: money, a shop, a buy window, refunds, and the round-based
+competitive shooters' loss-bonus ladder. **It sells ids and grants nothing.**
 
 **The distributable is `addons/dot_economy/`.** It requires [dot-core](../dot-core), a
 separate repository, and nothing else.
@@ -17,7 +17,7 @@ validated against a schema and entitlements. That is the *permanent* question �
 own, what you have unlocked. It has no answer at all for the *per-round* one: what you can
 afford this round, given how the last one went.
 
-That question is the whole of Counter-Strike. It is also the system most commonly
+That question is the whole of the genre. It is also the system most commonly
 reimplemented badly, because the numbers look arbitrary and are not:
 
 - **800 to start and 16000 as a ceiling** is what makes the first round a pistol round, the
@@ -32,9 +32,9 @@ reimplemented badly, because the numbers look arbitrary and are not:
 
 ## The one idea: a shop item is an id and a price
 
-`DotShopItem` has no scene, no mesh, no `DotItem` and no `DotWeapon` in it. `bought` carries
+`DotShopItem` has no scene, no mesh, no `DotItem` and no `DotWeaponDef` in it. `bought` carries
 an id and the game does whatever that means — grant a `DotItem` through
-[dot-loadout](../dot-loadout), add a `DotWeapon` to a `DotArsenal`, set a boolean.
+[dot-loadout](../dot-loadout), give a weapon id to a `DotWeaponArsenal`, set a boolean.
 
 That is dot-loadout's own rule for dot-loadout's own reason: **a purchase has to validate
 without loading anything**, because the validation happens on a server that may not have
@@ -53,10 +53,11 @@ dot-loadout nor dot-combat, and why a game wires the two together in about four 
 
 ## Decisions
 
-### 1. The loss bonus is per team, and Counter-Strike: Source's is not
+### 1. The loss bonus is per team, and the original's is not
 
-Source keeps **one** `m_iLoserBonus` shared between both sides, which produces the famous
-case where breaking your own losing streak raises the other team's bonus. That was a bug
+The early entries keep **one** loser-bonus counter shared between both sides, which
+produces the well-known case where breaking your own losing streak raises the other
+team's bonus. That was a bug
 that became a feature and then stopped being one. Here each team has its own ladder, which
 is what every game since does.
 
@@ -100,8 +101,8 @@ economy keyed on one hands a reconnecting player a fresh 800 in the middle of a 
 **`buy_time_ticks == 0` means "no timer", and the round start read it as "no buying".**
 `_set_buy_open(rules.buy_time_ticks != 0)` is the wrong condition by one negation, and the
 configuration it broke is the one a game without a buy timer uses — a sandbox shop, a
-deathmatch with a permanent buy menu, every game in this family that is not Counter-Strike
-shaped. Nothing errored: every refusal correctly reported "the buy window is closed",
+deathmatch with a permanent buy menu, every game in this family that is not shaped like
+that genre. Nothing errored: every refusal correctly reported "the buy window is closed",
 which is a true statement about a state that should never have been reached.
 
 ## Validating
@@ -122,7 +123,7 @@ godot --headless --path . res://examples/economy_selftest.tscn   # 101 checks
 - **No persistent currency.** Money here is per match. A currency that survives a
   disconnect is an account balance and belongs behind an authenticated backbone, which is
   dot-auth and dot-stats — and a "buy" against one is a transaction, not a game rule.
-- **No per-weapon ammunition economy.** Counter-Strike buys ammunition with the gun.
+- **No per-weapon ammunition economy.** The genre buys ammunition with the gun.
   A game that wants it declares an item with `requires` set.
 - **No auto-buy or rebuy.** They are a client convenience built on `may_buy` and a stored
   list, and the list is a preference, which is dot-user's.

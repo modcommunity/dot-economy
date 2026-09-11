@@ -3,8 +3,8 @@ extends Node
 ## Exercises dot-economy with no other addon and no world.
 ##
 ## Teams, positions and liveness are dictionaries, which is the seam a real game fills.
-## What is checked is what this addon promises: that the ladder is Counter-Strike's,
-## that a buy window closes on a tick rather than a clock, that a refund cannot be used
+## What is checked is what this addon promises: that the ladder is the genre's, that a
+## buy window closes on a tick rather than a clock, that a refund cannot be used
 ## as a savings account, and that money above the ceiling is reported rather than
 ## silently swallowed.
 ##
@@ -64,15 +64,15 @@ func _arsenal() -> Array[DotShopItem]:
 	ak.teams = PackedInt32Array([1])
 	var m4 := DotShopItem.make(&"m4a1", 3100, "M4A1")
 	m4.teams = PackedInt32Array([2])
-	var awp := DotShopItem.make(&"awp", 4750, "AWP")
-	awp.kill_award = 100
+	var sniper := DotShopItem.make(&"sniper", 4750, "Sniper Rifle")
+	sniper.kill_award = 100
 	var nade := DotShopItem.make(&"he", 300, "HE Grenade")
 	nade.per_round_limit = 1
 	nade.tags = PackedStringArray(["grenade"])
 	var defuser := DotShopItem.make(&"defuser", 400, "Defuse Kit")
 	defuser.teams = PackedInt32Array([2])
 	defuser.refundable = false
-	return [kevlar, helmet, ak, m4, awp, nade, defuser]
+	return [kevlar, helmet, ak, m4, sniper, nade, defuser]
 
 
 func _manager() -> DotEconomyManager:
@@ -94,7 +94,7 @@ func _test_rules() -> void:
 
 	var rules := DotEconomyRules.new()
 	_check(rules.validate().ok, "the defaults validate")
-	_check(rules.start_money == 800, "and are Counter-Strike's: 800 to start")
+	_check(rules.start_money == 800, "and are the genre's: 800 to start")
 	_check(rules.max_money == 16000, "16000 as a ceiling")
 
 	_check(rules.loss_bonus_for(1) == 1400, "the ladder starts at 1400")
@@ -137,11 +137,11 @@ func _test_items() -> void:
 
 	var rules := DotEconomyRules.new()
 	_check(ak.award_for_kill(rules) == 300, "a kill pays the default")
-	var awp := DotShopItem.make(&"awp", 4750)
-	awp.kill_award = 100
+	var sniper := DotShopItem.make(&"sniper", 4750)
+	sniper.kill_award = 100
 	_check(
-		awp.award_for_kill(rules) == 100,
-		"unless the weapon says otherwise — Counter-Strike's most-copied economic idea"
+		sniper.award_for_kill(rules) == 100,
+		"unless the weapon says otherwise — the genre's most-copied economic idea"
 	)
 
 	var bad := DotShopItem.new()
@@ -161,7 +161,7 @@ func _test_shop() -> void:
 	_check(built.ok, "an arsenal builds")
 	var shop: DotShop = built.value
 	_check(shop.has(&"ak47"), "and has what was put in it")
-	_check(shop.item(&"awp").price == 4750, "with its price")
+	_check(shop.item(&"sniper").price == 4750, "with its price")
 
 	var t := shop.for_team(1)
 	var ids: Array[StringName] = []
@@ -417,11 +417,11 @@ func _test_kills() -> void:
 	var got := m.on_kill("ada", "bob", &"ak47")
 	_check(got == 300, "a rifle kill pays 300")
 
-	got = m.on_kill("ada", "bob", &"awp")
+	got = m.on_kill("ada", "bob", &"sniper")
 	_check(
 		got == 100,
-		"an AWP kill pays 100, so the cheapest way to make money is the riskiest thing "
-		+ "you can do"
+		"a sniper-rifle kill pays 100, so the cheapest way to make money is the riskiest "
+		+ "thing you can do"
 	)
 
 	var _rich := m.award("ada", 5000, &"test")
@@ -430,7 +430,7 @@ func _test_kills() -> void:
 	_check(got < 0, "killing a team-mate costs money")
 	_check(m.balance("ada") == before - m.rules.teamkill_penalty, "3300 of it")
 
-	# And the clamp, which is Counter-Strike's: a negative balance is a player who
+	# And the clamp, which is the genre's: a negative balance is a player who
 	# cannot buy for several rounds through no further fault, and the fine is meant to
 	# cost them this round rather than the half.
 	var _spend := m.award("ada", -(m.balance("ada") - 100), &"test")

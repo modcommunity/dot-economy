@@ -4,21 +4,21 @@ extends DotConfig
 
 ## Every number in a round-based economy, in one layered configuration.
 ##
-## [b]The defaults are Counter-Strike's, and every one of them is load-bearing.[/b] A
-## buy economy is the most carefully tuned system in competitive shooters and the
-## numbers are not roundable: 800 to start and 16000 as a ceiling is what makes the
+## [b]The defaults are the round-based competitive shooters', and every one of them is
+## load-bearing.[/b] A buy economy is the most carefully tuned system in that genre and
+## the numbers are not roundable: 800 to start and 16000 as a ceiling is what makes the
 ## first round a pistol round and the fifth a full one; 1400 rising by 500 to 3400 is
 ## what stops a team that loses twice from losing the other thirteen.
 ##
-## Where a value differs between Counter-Strike: Source and its successors, this takes
-## the later one and says so. The most visible is the loss bonus: Source keeps **one**
-## shared counter for both teams, which produces the famous case where breaking your own
-## losing streak raises the other side's bonus. That is a bug that became a feature and
-## then stopped being one; here each team has its own ladder.
+## Where a value differs between the genre's early entries and their successors, this
+## takes the later one and says so. The most visible is the loss bonus: the early ones
+## keep [b]one[/b] shared counter for both teams, which produces the well-known case
+## where breaking your own losing streak raises the other side's bonus. That is a bug
+## that became a feature and then stopped being one; here each team has its own ladder.
 
 @export_group("Balance")
 
-## What everybody starts a match with. Counter-Strike's 800.
+## What everybody starts a match with. The genre's 800.
 @export_range(0, 100000, 1) var start_money: int = 800
 
 ## The ceiling. Money above it is not banked, it is lost.
@@ -29,8 +29,8 @@ extends DotConfig
 
 ## Whether a player keeps their balance through their own death.
 ##
-## On. Counter-Strike's economy is per round, not per life: dying is punished by not
-## having a gun next round, which is enough.
+## On. The genre's economy is per round, not per life: dying is punished by not having
+## a gun next round, which is enough.
 @export var keep_on_death: bool = true
 
 ## Whether balances reset when the sides swap at half time.
@@ -40,11 +40,12 @@ extends DotConfig
 
 ## What a kill is worth when the weapon does not say.
 ##
-## Counter-Strike prices this per weapon — 300 for a rifle, 100 for the AWP, 1500 for a
-## knife — and [DotShopItem.kill_award] is where that lives. This is the fallback.
+## The genre prices this per weapon — 300 for a rifle, 100 for a high-calibre sniper
+## rifle, 1500 for a knife — and [DotShopItem.kill_award] is where that lives. This is
+## the fallback.
 @export_range(0, 100000, 1) var kill_award: int = 300
 
-## Taken from somebody who kills a team-mate. Counter-Strike's 3300.
+## Taken from somebody who kills a team-mate. The genre's 3300.
 @export_range(0, 100000, 1) var teamkill_penalty: int = 3300
 
 ## Taken from somebody who kills themselves.
@@ -68,15 +69,15 @@ extends DotConfig
 @export var loss_bonus_resets_on_win: bool = true
 
 ## Paid to a team for completing an objective, on top of anything the objective itself
-## awards. What Counter-Strike pays for a plant that is then defused.
+## awards. What the genre pays for a plant that is then defused.
 @export_range(0, 100000, 1) var objective_award: int = 300
 
 @export_group("Buying")
 
 ## Ticks after a round starts during which buying is allowed. Zero means always.
 ##
-## Counter-Strike's twenty seconds. It is what makes a buy a decision made under the
-## same information as everybody else's rather than a reaction to what they bought.
+## The genre's twenty seconds. It is what makes a buy a decision made under the same
+## information as everybody else's rather than a reaction to what they bought.
 @export_range(0, 1000000, 1) var buy_time_ticks: int = 1280
 
 ## Whether a player has to be standing in a buy zone.
@@ -85,13 +86,13 @@ extends DotConfig
 ## is asked. Off for a game with no zones, which is most of them outside this genre.
 @export var require_buy_zone: bool = true
 
-## Whether a dead player may buy for next round. Counter-Strike: no.
+## Whether a dead player may buy for next round. In the genre: no.
 @export var allow_buying_while_dead: bool = false
 
 ## Ticks after a purchase during which it may be refunded in full.
 ##
-## Zero disables refunds. Counter-Strike: Global Offensive's five seconds, which exists
-## because a misclick in the buy menu is a lost round and everybody has done it.
+## Zero disables refunds. The modern entries' five seconds, which exists because a
+## misclick in the buy menu is a lost round and everybody has done it.
 @export_range(0, 1000000, 1) var refund_ticks: int = 320
 
 ## How much of the price comes back. 1.0 is everything.

@@ -25,7 +25,7 @@ economy.bought.connect(func(key, id, price, balance):
     loadouts.grant(key, id))          # or an arsenal, or a boolean
 ```
 
-A shop item has no scene, no mesh and no `DotItem` in it, so a purchase validates on a server that does not have the content — which is the same rule `dot-loadout` is built on.
+A shop item has no scene, no mesh and no `DotItem` in it, so a purchase validates on a server that does not have the content, which is the same rule `dot-loadout` is built on.
 
 ## Using it
 
