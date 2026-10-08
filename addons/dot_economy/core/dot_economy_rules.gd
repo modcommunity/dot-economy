@@ -110,7 +110,7 @@ func env_prefix() -> String:
 
 
 func cli_prefix() -> String:
-	return "economy-"
+	return "--economy-"
 
 
 func validate() -> DotResult:
