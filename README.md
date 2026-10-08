@@ -36,9 +36,12 @@ economy.bought.connect(func(key, id, price, balance):
 
 economy.on_round_start(tick)        # opens the buy window
 economy.advance(tick)               # closes it when the buy time runs out
+economy.buy("ada", &"rifle")        # a DotResult; bought fires if it went through
 economy.on_kill("ada", "bob", &"rifle")
-economy.on_round_end(winning_team)  # pays the winners and the loss bonus
+economy.on_round_end(winning_team)  # pays the winners and the loss bonus; 0 is a draw
 ```
+
+`team_fn` has to be set. Without it nobody is paid at the end of a round, and a warning says so. Teams are numbered from 1, because team 0 means nobody.
 
 A buy menu can ask whether a purchase would go through before it draws the button:
 
@@ -48,10 +51,26 @@ button.disabled = not why.ok
 button.tooltip_text = "" if why.ok else why.error.message
 ```
 
-Each `DotShopItem` has an `id`, a `price`, the `teams` that may buy it, per-round and per-life limits, and an optional `kill_award` that replaces the default for kills made with it. A cheap knife kill can pay 1500 and a sniper kill 100, for example.
+Each `DotShopItem` has an `id`, a `price`, the `teams` that may buy it, per-round and per-life limits, an item it `requires` first, whether it is `refundable`, and an optional `kill_award` that replaces the default for kills made with it. A knife kill can pay 1500 and a sniper kill 100, for example.
+
+The other signals are `refunded`, `balance_changed` (with a reason such as `kill` or `loss_bonus`), `buy_window` (open or closed) and `award_capped`, which fires when money was lost to the ceiling so a HUD does not show more than landed.
+
+A balance is private. `to_wire(key)` gives one player's account and `apply_wire()` loads it on their client, where the manager has `authoritative` set to false.
 
 ## Settings
-The rules live in a `DotEconomyRules` resource. Like every Dot config they can be set in the inspector, a JSON file, the environment (`DOT_ECONOMY_START_MONEY=1000`) or the command line (`--economy-start-money=1000`).
+The rules live in a `DotEconomyRules` resource, set on the manager's `rules` (it makes a default one if you do not). Like every Dot config it is layered: inspector defaults, then a JSON file, then the environment, then the command line. Call `load_layered()` on it before `setup()` to apply them:
+
+```gdscript
+var rules := DotEconomyRules.new()
+rules.load_layered("user://economy.json")
+economy.rules = rules
+```
+
+```bash
+DOT_ECONOMY_START_MONEY=1000 godot --headless -- --economy-max-money=9000
+```
+
+Ticks depend on your tick rate. The defaults below assume 64 ticks a second.
 
 | Setting | Default | What it does |
 | --- | --- | --- |
@@ -67,17 +86,18 @@ The rules live in a `DotEconomyRules` resource. Like every Dot config they can b
 | `loss_bonus_step` | 500 | Added to the loss bonus for each loss in a row |
 | `loss_bonus_max` | 3400 | Highest the loss bonus goes |
 | `loss_bonus_resets_on_win` | true | A win resets the losing streak |
-| `objective_award` | 300 | Paid for an objective (a plant, a defuse, a capture) |
-| `buy_time_ticks` | 1280 | How long the buy window stays open |
+| `objective_award` | 300 | Paid to each player on a team that completes an objective |
+| `buy_time_ticks` | 1280 | How long the buy window stays open (20 seconds). 0 keeps it open all round |
 | `require_buy_zone` | true | Only buy while standing in a buy zone |
 | `allow_buying_while_dead` | false | Let dead players buy |
-| `refund_ticks` | 320 | How long after a purchase it can be refunded |
+| `refund_ticks` | 320 | How long after a purchase it can be refunded (5 seconds). 0 turns refunds off |
 | `refund_fraction` | 1.0 | Share of the price a refund gives back |
 | `refund_within_buy_time` | true | Refunds only while the buy window is open |
 
 ## Testing
 
 ```bash
+godot --headless --path . --import
 godot --headless --path . res://examples/economy_selftest.tscn
 ```
 

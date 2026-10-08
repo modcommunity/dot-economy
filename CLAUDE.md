@@ -26,7 +26,7 @@ reimplemented badly, because the numbers look arbitrary and are not:
 - **1400 rising by 500 to 3400** is what stops a team that loses two rounds from losing the
   other thirteen. Without a ladder the losing team is poorer *because* they are losing,
   which is a feedback loop with only one outcome.
-- **An AWP kill pays 100 and a knife kill pays 1500.** The cheapest way to make money is
+- **A high-calibre sniper rifle kill pays 100 and a knife kill pays 1500.** The cheapest way to make money is
   the riskiest thing you can do, which is the single most-copied economic idea in the
   genre.
 
