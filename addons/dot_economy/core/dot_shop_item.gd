@@ -36,6 +36,10 @@ extends Resource
 @export_range(0, 64, 1) var per_round_limit: int = 0
 
 ## How many may be held at once, across rounds. Zero means no limit.
+##
+## "Held" is what was bought minus what the game said is gone: [method DotEconomyManager.on_death]
+## empties it and [method DotEconomyManager.lost] takes one away (a grenade thrown, a gun
+## dropped). A game that tells it neither gets a limit per half, not per life.
 @export_range(0, 64, 1) var per_life_limit: int = 0
 
 ## Free-form labels. A buy menu's tabs, and what a "buy all grenades" command matches.

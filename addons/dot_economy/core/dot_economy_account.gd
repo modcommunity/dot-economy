@@ -97,6 +97,19 @@ func forget_purchase(id: StringName) -> bool:
 	return false
 
 
+## [param count] of [param id] are gone from what is held (used, dropped, taken): what
+## [member DotShopItem.per_life_limit] and [member DotShopItem.requires] count. Returns how
+## many were removed.
+func drop_held(id: StringName, count: int = 1) -> int:
+	var have := int(held.get(id, 0))
+	var gone := mini(have, maxi(count, 0))
+	if have - gone <= 0:
+		held.erase(id)
+	else:
+		held[id] = have - gone
+	return gone
+
+
 ## A new round: the purchase list starts again, the balance does not.
 func begin_round() -> void:
 	purchases.clear()

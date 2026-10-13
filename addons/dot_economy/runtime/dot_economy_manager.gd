@@ -111,6 +111,23 @@ func balance(key: String) -> int:
 	return account(key).balance
 
 
+## [param key] died: everything they held is gone, so [member DotShopItem.per_life_limit] and
+## [member DotShopItem.requires] start again. The money stays. Until this existed `held`
+## only fell on a refund or a reset, so a player who died with a rifle could not buy it again
+## all half.
+func on_death(key: String) -> void:
+	var acct: DotEconomyAccount = _accounts.get(key, null)
+	if acct != null:
+		acct.held.clear()
+
+
+## [param count] of [param id] that [param key] held are gone: thrown, dropped, used up.
+## Returns how many were.
+func lost(key: String, id: StringName, count: int = 1) -> int:
+	var acct: DotEconomyAccount = _accounts.get(key, null)
+	return acct.drop_held(id, count) if acct != null else 0
+
+
 func forget(key: String) -> void:
 	_accounts.erase(key)
 

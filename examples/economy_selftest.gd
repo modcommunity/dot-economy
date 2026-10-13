@@ -13,7 +13,7 @@ extends Node
 ## [/codeblock]
 
 const SECTIONS := 10
-const CHECKS := 101
+const CHECKS := 105
 
 const RATE := 64
 
@@ -299,6 +299,20 @@ func _test_buying() -> void:
 	m.rules.allow_buying_while_dead = true
 	_check(m.buy("ada", &"kevlar").ok, "unless the server says they may")
 	_alive["ada"] = true
+
+	# What is held is per life once the game says what happened to it. Before on_death and
+	# lost, `held` fell only on a refund or a reset: a player who died with a rifle could not
+	# buy it again all half.
+	var _paid := m.award("ada", 10000, &"test")
+	m.shop.item(&"ak47").per_life_limit = 1
+	_check(not m.buy("ada", &"ak47").ok, "a rifle held is not sold twice under per_life_limit")
+	m.on_death("ada")
+	_check(m.buy("ada", &"ak47").ok, "and is again once they have died with it")
+	_check(not m.buy("ada", &"helmet").ok, "while a helmet needs the kevlar they lost")
+	m.on_round_start(1)
+	var _k2 := m.buy("ada", &"kevlar")
+	_check(m.lost("ada", &"kevlar") == 1 and not m.buy("ada", &"helmet").ok,
+		"and kevlar the game says is gone no longer counts")
 
 	var why := m.may_buy("ada", &"nothing")
 	_check(
